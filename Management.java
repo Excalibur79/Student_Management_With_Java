@@ -82,7 +82,7 @@ class Mananagement{
             database.closeConnection();          
         }            
         else
-            System.out.println("Connection Not Succesfull !");
+            System.out.println(ANSI_RED+"\n Connection Not Succesfull !"+ANSI_RESET);
     }
 
     public static void CreateStudent()throws IOException{    
