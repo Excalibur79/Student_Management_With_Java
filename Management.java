@@ -2,9 +2,9 @@ import java.sql.SQLException;
 import java.io.*;
 class Mananagement{
      //Credentials=======================================================================
-     public static String MySQLURL = "jdbc:mysql://remotemysql.com:3306/nuBkXnxaNd?useSSL=false";
-     public static String databaseUserName = "nuBkXnxaNd";
-     public static String databasePassword = "kDew1DUPPm";
+     public static String MySQLURL = "databaseurl";
+     public static String databaseUserName = "databaseusernane";
+     public static String databasePassword = "databasepassword";
      //===================================================================================
 
      
