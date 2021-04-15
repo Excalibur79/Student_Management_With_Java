@@ -2,9 +2,9 @@ import java.sql.SQLException;
 import java.io.*;
 class Mananagement{
      //Credentials=======================================================================
-     public static String MySQLURL = "jdbc:mysql://remotemysql.com:3306/nuBkXnxaNd?useSSL=false";
-     public static String databaseUserName = "nuBkXnxaNd";
-     public static String databasePassword = "kDew1DUPPm";
+     public static String MySQLURL = "";
+     public static String databaseUserName = "";
+     public static String databasePassword = "";
      //===================================================================================
 
      
@@ -37,7 +37,7 @@ class Mananagement{
             int loop=1;
             int Case;
             while(loop==1){
-                System.out.print(ANSI_YELLOW+"\n =====COMMANDS=====\n \n 1 Create Student \n 2 Find by enroll_id \n 3 Delete Record \n 4 Print The Database \n 5 Print Students with CGPA condition \n 6 Update Student CGPA \n\n Option : "+ANSI_RESET);
+                System.out.print(ANSI_YELLOW+"\n =====COMMANDS=====\n \n 1 Create Student \n 2 Find by enroll_id \n 3 Delete Record \n 4 Print The Database \n 5 Print Students with CGPA condition \n 6 Update Student CGPA \n 7 Print Students in Section \n\n Option : "+ANSI_RESET);
                 Case=Integer.parseInt(br.readLine());
                 switch(Case){
                     case 1:CreateStudent();                           
@@ -72,6 +72,11 @@ class Mananagement{
                                 ANSI_GREEN+"\n Student Updated!"+ANSI_RESET:
                                 ANSI_RED+"\n OPPS! Student Not Updated !"+ANSI_RESET
                             );                      
+                            break;
+                    case 7:
+                            System.out.print(ANSI_PURPLE+"\n Enter Section To get Students : "+ANSI_RESET);
+                            section=br.readLine();
+                            database.getBySection(section);
                             break;
                     default:
                         System.out.println(ANSI_RED+"\n Invalid Choice !"+ANSI_RESET);

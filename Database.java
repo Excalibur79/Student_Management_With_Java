@@ -8,6 +8,7 @@ public class Database{
     public static String lessThanCgpaStatement="select * from `Students` where cgpa<=?";
     public static String deleteStatement="delete from `Students` where `id`=?";
     public static String updateStatement="update `Students` set cgpa=? where id=?";
+    public static String getBySectionStatement="select * from `Students` where `section`=?";
      //Color Codes========================================================================
      final static  String ANSI_RESET = "\u001B[0m"; 
      final  static  String ANSI_BLACK = "\u001B[30m"; 
@@ -31,7 +32,7 @@ public class Database{
     }
     public void closeConnection() throws SQLException{
         this.conn.close();
-        System.out.println("\n Database Connection Closed!");
+        System.out.println(ANSI_CYAN+"\n Database Connection Closed!"+ANSI_RESET);
     }
 
     public boolean insertData(Student std){
@@ -62,17 +63,14 @@ public class Database{
         if(numberOfRows>0){
             res.beforeFirst();
             System.out.println(ANSI_CYAN+"\n =====The Student is======"+ANSI_RESET);           
-            while(res.next())
-            {
-                System.out.println("\n ID : "+res.getString("id"));
-                System.out.println(" Name : "+res.getString("name"));
-                System.out.println(" CGPA : "+res.getString("cgpa"));
-                System.out.println(" Section :"+res.getString("section"));
-            }
+            res.next();
+            System.out.println("\n ID : "+res.getString("id"));
+            System.out.println(" Name : "+res.getString("name"));
+            System.out.println(" CGPA : "+res.getString("cgpa"));
+            System.out.println(" Section :"+res.getString("section"));
         }
-        else{
+        else
             System.out.println(ANSI_RED+"\n =====No Student Found======"+ANSI_RESET);
-        }
     }
 
     public boolean deleteRecord(int id)throws SQLException{
@@ -83,20 +81,10 @@ public class Database{
     }
 
     public void printDatabase()throws SQLException{
-        Statement statement=this.conn.createStatement();
+        Statement statement=this.conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, 
+        ResultSet.CONCUR_UPDATABLE);
         ResultSet res=statement.executeQuery(printTableStatement);
-        System.out.println(ANSI_CYAN+"\n =====The Students Are======"+ANSI_RESET);
-        int counter=0;
-        while(res.next())
-        {
-            counter++;
-            System.out.println(ANSI_YELLOW+"\n "+"STUDENT "+counter+ANSI_RESET);
-            System.out.println("\n ID : "+res.getString("id"));
-            System.out.println(" Name : "+res.getString("name"));
-            System.out.println(" CGPA : "+res.getString("cgpa"));
-            System.out.println(" Section :"+res.getString("section"));
-
-        }
+        printResultSet(res);       
     }
 
     public void getByCgpaCondition(float cgpa,String Cond)throws SQLException{
@@ -105,23 +93,7 @@ public class Database{
         ResultSet.CONCUR_UPDATABLE);
         statement.setFloat(1, cgpa);
         ResultSet res=statement.executeQuery();
-        int numberOfRows=0;
-        while(res.next()){
-            numberOfRows++;
-        }
-        if(numberOfRows>0){
-            res.beforeFirst();
-            System.out.println(ANSI_CYAN+"\n =====The Students are======"+ANSI_RESET);           
-            while(res.next()){
-                System.out.println("\n ID : "+res.getString("id"));
-                System.out.println(" Name : "+res.getString("name"));
-                System.out.println(" CGPA : "+res.getString("cgpa"));
-                System.out.println(" Section :"+res.getString("section"));
-            }
-        }
-        else{
-            System.out.println(ANSI_RED+"\n =====No Student Found======"+ANSI_RESET);
-        }
+        printResultSet(res);       
     }
 
     public boolean handleUpdate(int id,float cgpa)throws SQLException{
@@ -130,5 +102,35 @@ public class Database{
         statement.setInt(2,id);
         return statement.executeUpdate()>0
         ?true:false;
+    }
+
+    public void getBySection(String section)throws SQLException{
+        PreparedStatement statement=this.conn.prepareStatement(getBySectionStatement,ResultSet.TYPE_SCROLL_INSENSITIVE, 
+        ResultSet.CONCUR_UPDATABLE);
+        statement.setString(1, section);
+        ResultSet res=statement.executeQuery();
+        printResultSet(res);
+    }
+    public void printResultSet(ResultSet res)throws SQLException{
+        int numberOfRows=0;
+        while(res.next()){
+            numberOfRows++;
+        }
+        if(numberOfRows>0){
+            res.beforeFirst();
+            System.out.println(ANSI_CYAN+"\n =====The Students are======"+ANSI_RESET);    
+            int counter=0;       
+            while(res.next()){
+                counter++;
+                System.out.println(ANSI_CYAN+"\n STUDENT "+counter+ANSI_RESET);
+                System.out.println(ANSI_YELLOW+"\n ID : "+res.getString("id")+ANSI_RESET);
+                System.out.println(ANSI_YELLOW+" Name : "+res.getString("name")+ANSI_RESET);
+                System.out.println(ANSI_YELLOW+" CGPA : "+res.getString("cgpa")+ANSI_RESET);
+                System.out.println(ANSI_YELLOW+" Section :"+res.getString("section")+ANSI_RESET);
+            }
+        }
+        else{
+            System.out.println(ANSI_RED+"\n =====No Student Found======"+ANSI_RESET);
+        }
     }
 }
